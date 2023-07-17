@@ -4,21 +4,21 @@ import axios from "axios";
 import webConfig from "@/global.config"
 //baseURL,timeout,header,responseType,withCredentials
 //base64
-import { base64 } from "js-base64"
+import { Base64 } from "js-base64"
 //创建axios对象，后面的请求用request来发
-const request = axios.create({
+const requests = axios.create({
   // 1.基础配置
-  baseURL: "http://localhost:8080",
+  baseURL: "/api",
   timeout: 30 * 1000,
   //返回数据类型格式
-  responseType: "json",
-  headers: {
-    "a": "123"
-  }
+  //responseType: "json",
+  // headers: {
+  //   "a": "123"
+  // }
 })
 
 //请求拦截器
-request.interceptors.request.use((config) => {
+requests.interceptors.request.use((config) => {
   //token，密钥的设置
   //token 配置
   let whitListApi = webConfig.whiteListApi
@@ -29,13 +29,18 @@ request.interceptors.request.use((config) => {
     config.headers.token = token
   }
   //密钥 -secretId + 特殊算法
-  let _secret = base64.encode(webConfig.secretId + new Date().toString())
+  let _secret = Base64.encode(webConfig.secretId + new Date().toString())
   config.headers.secret = _secret
   return config
-}, erro => {
+}, error => {
   return Promise.reject(new Error(error))
 })
 //响应拦截器
-request.interceptors.response.use(() => {
-  //响应的统一处理
+requests.interceptors.response.use((res) => {
+  console.dir(res);
+  return res.data;
+}, (error) => {
+  return Promise.reject(new Error(error));
 })
+
+export default requests;

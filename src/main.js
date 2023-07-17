@@ -7,11 +7,17 @@ import "element-ui/lib/theme-chalk/index.css"
 import Footer from '@/components/Footer/Footer.vue'
 import Logo from "@/assets/images/logo.png"
 import '@/assets/css/global.css'
+import SubNavBar from '@/components/SubNavBar/SubNavBar.vue'
+import axios from 'axios'
+
+axios.defaults.withCredentials = true
+Vue.prototype.$http = axios
 
 Vue.prototype.$imgLogo = Logo
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 Vue.component('Footer', Footer)
+Vue.component(SubNavBar.name, SubNavBar)
 new Vue({
   router,
   store,

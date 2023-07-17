@@ -1,7 +1,6 @@
-<!--  -->
 <template>
   <div class="subNav">
-    <div id="containe">
+    <div id="container">
       <router-link to="/">
         <img :src="$imgLogo" alt="" height="80" style="margin:10px 0">
       </router-link>
@@ -20,7 +19,7 @@ export default {
 
   computed: {},
 
-  mounted() {},
+  mounted() { },
 
   methods: {},
 }
