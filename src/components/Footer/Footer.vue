@@ -28,32 +28,36 @@ export default {
 
   computed: {},
 
-  mounted() {},
+  mounted() { },
 
   methods: {},
 }
 </script>
 <style lang='less' scoped>
 div {
-  background-color: #f4f4f4;
+  background-color: #eaeaea;
   height: 140px;
+
   .footer {
     display: flex;
     justify-content: space-between;
+
     .left {
       p {
         margin: 20px 0;
       }
     }
+
     .right {
       width: 500px;
+
       p {
         margin: 20px 0;
       }
     }
   }
 }
+
 .el-footer {
   padding: 0;
-}
-</style>
+}</style>

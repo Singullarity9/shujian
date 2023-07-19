@@ -79,6 +79,7 @@ export default {
           const res = await reqUserLogin({ password: pass, username });
           if (res.code == 200) {
             this.$store.commit('USERLOGIN')
+            this.$router.push('/')
           } else {
             return Promise.reject(new Error('failed'))
           }

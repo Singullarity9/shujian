@@ -37,7 +37,7 @@ requests.interceptors.request.use((config) => {
 })
 //响应拦截器
 requests.interceptors.response.use((res) => {
-  console.dir(res);
+  //console.dir(res);
   return res.data;
 }, (error) => {
   return Promise.reject(new Error(error));
