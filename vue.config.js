@@ -8,7 +8,7 @@ module.exports = defineConfig({
     proxy: {
       '/api': {
         //target: 'http://192.168.113.4:80/'
-        target: 'https://yapi.pro/mock/41361',
+        target: 'https://yapi.pro/mock/43582',
       }
     }
   }

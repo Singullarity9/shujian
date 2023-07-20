@@ -1,253 +1,263 @@
 <template>
-    <div>
-        <Header />
-        <div id="container">
-            <!-- 导航栏 -->
-            <NavBar />
-            <el-row class="main">
-                <el-col :span="12">
-                    <div class="left">
-                        <img :src="singleBookData.picture" alt="" width="300" height="400">
-                    </div>
-                </el-col>
-                <el-col :span="12">
-                    <div class="right">
-                        <h1 class="bName">书名：{{ singleBookData.name }}</h1>
-                        <p class="bDescription" v-show="singleBookData">{{ singleBookData.description }}</p>
-                        <div class="clearfix">
-                            <div class="cost_box">
-                                <p class="bPrice">
-                                    售&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价：
-                                    <span class="normal_price">￥ <i>{{ singleBookData.prize }}</i></span>
-                                </p>
-                            </div>
-                            <div class="count_per">
-                                <em>{{ singleBookData.N_people }}人评论</em>
-                            </div>
-                        </div>
-                        <p>作者：{{ singleBookData.author }}</p>
-                        <p>出版社：{{ singleBookData.publish }}</p>
-                        <p>评分：{{ singleBookData.score }}</p>
-                        <div class="cartWrap">
-                            <div class="controls">
-                                <input autocomplete="off" class="itxt" v-model="skuNum" @change="changeSkuNum">
-                                <a href="javascript:" class="plus" @click="skuNum++">+</a>
-                                <a href="javascript:" class="mins" @click="skuNum > 1 ? skuNum-- : skuNum = 1">-</a>
-                            </div>
-                            <div class="add">
-                                <a @click="addShopCar">加入购物车</a>
-                            </div>
-                        </div>
-                    </div>
-                </el-col>
-            </el-row>
-        </div>
-        <Footer />
+  <div>
+    <Header />
+    <div id="container">
+      <!-- 导航栏 -->
+      <NavBar />
+      <el-row class="main">
+        <el-col :span="12">
+          <div class="left">
+            <img :src="singleBookData.picture" alt="" width="300" height="400">
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="right">
+            <h1 class="bName">书名：{{ singleBookData.name }}</h1>
+            <p class="bDescription" v-show="singleBookData">{{ singleBookData.description }}</p>
+            <div class="clearfix">
+              <div class="cost_box">
+                <p class="bPrice">
+                  售&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价：
+                  <span class="normal_price">￥ <i>{{ singleBookData.prize }}</i></span>
+                </p>
+              </div>
+              <div class="count_per">
+                <em>{{ singleBookData.N_people }}人评论</em>
+              </div>
+            </div>
+            <p>作者：{{ singleBookData.author }}</p>
+            <p>出版社：{{ singleBookData.publish }}</p>
+            <p>评分：{{ singleBookData.score }}</p>
+            <div class="cartWrap">
+              <div class="controls">
+                <input autocomplete="off" class="itxt" v-model="skuNum" @change="changeSkuNum">
+                <a href="javascript:" class="plus" @click="skuNum++">+</a>
+                <a href="javascript:" class="mins" @click="skuNum > 1 ? skuNum-- : skuNum = 1">-</a>
+              </div>
+              <div class="add">
+                <a @click="addShopCar">加入购物车</a>
+              </div>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
     </div>
+    <Footer />
+  </div>
 </template>
   
 <script>
 import { mapState } from 'vuex'
 
 export default {
-    name: 'Book',
-    props: ['id'],
-    data() {
-        return {
-            skuNum: 1
-        }
-    },
-    mounted() {
-        this.$store.dispatch('getDetailInfo', this.id)
-    },
+  name: 'Book',
+  props: ['id'],
+  data() {
+    return {
+      skuNum: 1,
+    }
+  },
+  mounted() {
+    this.$store.dispatch('getDetailInfo', this.id)
+    console.log('-----------', this.singleBookData)
+  },
 
-    computed: {
-        ...mapState({
-            singleBookData: (state) => state.detail.bookDetailInfo
+  computed: {
+    ...mapState({
+      singleBookData: (state) => state.detail.bookDetailInfo,
+    }),
+  },
+  methods: {
+    changeSkuNum(event) {
+      let value = event.target.value * 1
+      if (isNaN(value) || value < 1) {
+        this.skuNum = 1
+      } else {
+        this.skuNum = parseInt(value)
+      }
+    },
+    async addShopCar() {
+      try {
+        await this.$store.dispatch('addOrUpdateShopCar', {
+          skuId: this.id,
+          skuNum: this.skuNum,
         })
+        //路由跳转,将产品信息带给下一级的路由组件
+        this.$router.push({
+          name: 'addcartsuccess',
+          query: { skuNum: this.skuNum },
+        })
+        window.sessionStorage.setItem(
+          'SKUINFO',
+          JSON.stringify(this.singleBookData)
+        )
+      } catch (error) {
+        alert(error.message)
+      }
     },
-    methods: {
-        changeSkuNum(event) {
-            let value = event.target.value * 1;
-            if (isNaN(value) || value < 1) {
-                this.skuNum = 1;
-            } else {
-                this.skuNum = parseInt(value);
-            }
-        },
-        async addShopCar() {
-            try {
-                await this.$store.dispatch('addOrUpdateShopCar', { skuId: this.id, skuNum: this.skuNum });
-                //路由跳转,将产品信息带给下一级的路由组件
-                this.$router.push({ name: 'addcartsuccess', query: { skuNum: this.skuNum } });
-                window.sessionStorage.setItem('SKUINFO', JSON.stringify(this.singleBookData));
-            } catch (error) {
-                alert(error.message);
-            }
-        }
-    },
+  },
 }
 </script>
 <style lang='less' scoped>
 .search {
-    height: 80px;
-    display: flex;
-    align-items: center;
+  height: 80px;
+  display: flex;
+  align-items: center;
 }
 
 .shopChart {
-    text-align: right;
-    line-height: 80px;
+  text-align: right;
+  line-height: 80px;
 }
 
 .main {
-    height: 600px;
-    margin: 40px 0;
+  height: 600px;
+  margin: 40px 0;
 
-    p,
-    em {
-        font-size: 14px;
-        line-height: 30px;
+  p,
+  em {
+    font-size: 14px;
+    line-height: 30px;
+  }
+
+  // background-color: rebeccapurple;
+  .left {
+    background-color: rgba(103, 155, 206, 0.5);
+    border-radius: 20px;
+
+    img {
+      display: block;
+      margin: 0 auto;
+      padding: 100px 0;
+    }
+  }
+
+  .right {
+    padding-left: 100px;
+    padding-top: 150px;
+
+    .bName {
+      color: #222;
+      font-size: 24px;
+      font-weight: bold;
+      line-height: 22px;
+      margin-bottom: 12px px;
     }
 
-    // background-color: rebeccapurple;
-    .left {
-        background-color: rgba(103, 155, 206, 0.5);
-        border-radius: 20px;
-
-        img {
-            display: block;
-            margin: 0 auto;
-            padding: 100px 0;
-        }
+    .bDescription {
+      font-size: 12px;
+      color: grey;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      margin: 20px 0 0 0;
+      max-height: 81px;
+      overflow: hidden;
     }
 
-    .right {
-        padding-left: 100px;
-        padding-top: 150px;
+    .clearfix {
+      background: #fee9eb;
 
-        .bName {
-            color: #222;
-            font-size: 24px;
-            font-weight: bold;
-            line-height: 22px;
-            margin-bottom: 12px px;
-        }
+      .cost_box {
+        width: 276px;
+        float: left;
 
-        .bDescription {
+        .bPrice {
+          .normal_price {
+            color: #ee554a;
             font-size: 12px;
-            color: grey;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            margin: 20px 0 0 0;
-            max-height: 81px;
-            overflow: hidden;
-        }
 
-        .clearfix {
-            background: #fee9eb;
-
-            .cost_box {
-                width: 276px;
-                float: left;
-
-                .bPrice {
-                    .normal_price {
-                        color: #ee554a;
-                        font-size: 12px;
-
-                        i {
-                            font-size: 22px;
-                            font-weight: 700;
-                            font-style: normal;
-                        }
-                    }
-                }
+            i {
+              font-size: 22px;
+              font-weight: 700;
+              font-style: normal;
             }
-
-            .count_per {
-                float: left;
-
-                em {
-                    font-style: normal;
-                }
-            }
+          }
         }
+      }
 
-        .cartWrap {
-            margin-top: 15px;
+      .count_per {
+        float: left;
 
-            .controls {
-                width: 48px;
-                position: relative;
-                float: left;
-                margin-right: 15px;
-
-                .itxt {
-                    width: 38px;
-                    height: 37px;
-                    border: 1px solid #ddd;
-                    color: #555;
-                    float: left;
-                    border-right: 0;
-                    text-align: center;
-                }
-
-                .plus,
-                .mins {
-                    width: 15px;
-                    text-align: center;
-                    height: 17px;
-                    line-height: 17px;
-                    background: #f1f1f1;
-                    color: #666;
-                    position: absolute;
-                    right: -8px;
-                    border: 1px solid #ccc;
-                }
-
-                .mins {
-                    right: -8px;
-                    top: 19px;
-                    border-top: 0;
-                }
-
-                .plus {
-                    right: -8px;
-                }
-            }
-
-            .add {
-                float: left;
-
-                a {
-                    background-color: #e1251b;
-                    padding: 0 25px;
-                    font-size: 16px;
-                    color: #fff;
-                    height: 36px;
-                    line-height: 36px;
-                    display: block;
-                }
-            }
+        em {
+          font-style: normal;
         }
-
-        .clearfix:after,
-        .clearfix:before {
-            content: "";
-            display: table;
-        }
-
-        .clearfix:after {
-            clear: both;
-            content: " ";
-            display: block;
-            font-size: 0;
-            height: 0;
-            visibility: hidden;
-        }
+      }
     }
+
+    .cartWrap {
+      margin-top: 15px;
+
+      .controls {
+        width: 48px;
+        position: relative;
+        float: left;
+        margin-right: 15px;
+
+        .itxt {
+          width: 38px;
+          height: 37px;
+          border: 1px solid #ddd;
+          color: #555;
+          float: left;
+          border-right: 0;
+          text-align: center;
+        }
+
+        .plus,
+        .mins {
+          width: 15px;
+          text-align: center;
+          height: 17px;
+          line-height: 17px;
+          background: #f1f1f1;
+          color: #666;
+          position: absolute;
+          right: -8px;
+          border: 1px solid #ccc;
+        }
+
+        .mins {
+          right: -8px;
+          top: 19px;
+          border-top: 0;
+        }
+
+        .plus {
+          right: -8px;
+        }
+      }
+
+      .add {
+        float: left;
+        cursor: pointer;
+        a {
+          background-color: #e1251b;
+          padding: 0 25px;
+          font-size: 16px;
+          color: #fff;
+          height: 36px;
+          line-height: 36px;
+          display: block;
+        }
+      }
+    }
+
+    .clearfix:after,
+    .clearfix:before {
+      content: '';
+      display: table;
+    }
+
+    .clearfix:after {
+      clear: both;
+      content: ' ';
+      display: block;
+      font-size: 0;
+      height: 0;
+      visibility: hidden;
+    }
+  }
 }
 </style>

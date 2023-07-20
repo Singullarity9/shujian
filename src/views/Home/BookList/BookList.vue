@@ -35,28 +35,24 @@ import { mapState } from 'vuex'
 export default {
   name: 'BooKList',
   data() {
-    return {
-
-    }
+    return {}
   },
 
   components: {},
 
   computed: {
     ...mapState({
-      bookData: (state) => state.home.recommendBookList
-    })
+      bookData: (state) => state.home.recommendBookList,
+    }),
   },
 
-  mounted() {
-  },
+  mounted() {},
 
   methods: {
     getBookDetail(bookId) {
       this.$router.push(`/book/${bookId}`)
-    }
+    },
   },
-
 }
 </script>
 <style lang='less' scoped>

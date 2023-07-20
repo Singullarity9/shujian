@@ -16,6 +16,9 @@ export const reqGetUserInfo = () => requests({ url: '/user/passport/getUserInfo'
 //用户注销登录  /api/user/passport/logout
 export const reqUserLogout = () => requests({ url: '/user/passport/logout', method: 'get' })
 
+//获取书籍分类列表 /api/category/{name}
+export const reqCategoryList = (name) => requests({ url: `/category/${name}`, method: 'get' })
+
 //获取推荐书籍列表  /api/recommendList
 export const reqRecommendBookList = () => requests({ url: '/recommendList', method: 'get' })
 

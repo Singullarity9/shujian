@@ -41,7 +41,20 @@ export default {
   data() {
     return {
       banner1,
-      bookCategoryList: ['文学类书籍', '非虚构类书籍', '教育类书籍', '生活类书籍', '参考类书籍']
+      bookCategoryList: [
+        '文学类书籍',
+        '非虚构类书籍',
+        '教育类书籍',
+        '生活类书籍',
+        '参考类书籍',
+      ],
+      bookCategoryListEnglish: [
+        'literature',
+        'non_fiction',
+        'education',
+        'life',
+        'reference',
+      ],
     }
   },
 
@@ -50,12 +63,11 @@ export default {
     this.$store.dispatch('getUserInfo')
     this.$store.dispatch('getRecommendBookList')
   },
-  computed: {
-  },
+  computed: {},
   methods: {
     getConcreteCate(cateName) {
       this.$router.push(`/bookcategory/${cateName}`)
-    }
+    },
   },
 }
 </script>
@@ -110,10 +122,10 @@ export default {
         // color: #3998e3;
       }
 
-      a:hover {
-        color: #e61716;
-        transition: 0.3s;
-      }
+      // a:hover {
+      //   color: #e61716;
+      //   transition: 0.3s;
+      // }
 
       &:hover {
         box-shadow: 0 1px 5px 0px rgba(0, 0, 0, 0.4);

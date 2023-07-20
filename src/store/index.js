@@ -7,12 +7,14 @@ import user from '@/store/user'
 import home from '@/store/home'
 import detail from '@/store/detail'
 import shopcart from '@/store/shopcart'
+import category from '@/store/category'
 
 export default new Vuex.Store({
   modules: {
     user,
     home,
     detail,
-    shopcart
+    shopcart,
+    category
   }
 })
