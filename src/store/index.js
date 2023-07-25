@@ -8,6 +8,7 @@ import home from '@/store/home'
 import detail from '@/store/detail'
 import shopcart from '@/store/shopcart'
 import category from '@/store/category'
+import trade from '@/store/trade'
 
 export default new Vuex.Store({
   modules: {
@@ -15,6 +16,7 @@ export default new Vuex.Store({
     home,
     detail,
     shopcart,
-    category
+    category,
+    trade
   }
 })

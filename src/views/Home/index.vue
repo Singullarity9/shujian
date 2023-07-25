@@ -55,13 +55,15 @@ export default {
         'life',
         'reference',
       ],
+      page: '1',
+      num: '20'
     }
   },
 
   components: { BookList },
   mounted() {
     this.$store.dispatch('getUserInfo')
-    this.$store.dispatch('getRecommendBookList')
+    this.$store.dispatch('getRecommendBookList', { page: this.page, num: this.num })
   },
   computed: {},
   methods: {

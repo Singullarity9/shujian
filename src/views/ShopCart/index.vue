@@ -16,27 +16,29 @@
           <div class="cart-th6">操作</div>
         </div>
         <div class="cart-body">
-          <ul class="cart-list" v-for="(cart, index) in cartInfoList" :key="cart.n">
+          <ul class="cart-list" v-for="(cart, index) in cartInfoList" :key="cart.bookid">
             <li class="cart-list-con1">
-              <input type="checkbox" name="chk_list" :checked="cart.isChecked == 1" @change="updateChecked(cart.n, $event)">
+              <input type="checkbox" name="chk_list" :checked="cart.ischecked == 1"
+                @change="updateChecked(cart.bookid, $event)">
             </li>
             <li class="cart-list-con2">
               <img :src="cart.picture">
-              <div class="item-msg">{{ cart.name }}</div>
+              <div class="item-msg">{{ cart.bookname }}</div>
             </li>
             <li class="cart-list-con4">
               <span class="price">{{ cart.prize }}</span>
             </li>
             <li class="cart-list-con5">
               <a class="mins" @click="handler('minus', -1, cart)">-</a>
-              <input autocomplete="off" type="text" minnum="1" class="itxt" :value="cart.skuNum" @change="handler('change', $event.target.value * 1, cart)">
+              <input autocomplete="off" type="text" minnum="1" class="itxt" :value="cart.booknum"
+                @change="handler('change', $event.target.value * 1, cart)">
               <a class="plus" @click="handler('add', 1, cart)">+</a>
             </li>
             <li class="cart-list-con6">
-              <span class="sum">{{ cart.prize * cart.skuNum }}</span>
+              <span class="sum">{{ (cart.prize * cart.booknum).toFixed(2) }}</span>
             </li>
             <li class="cart-list-con7">
-              <a class="sindelet" @click="deleteCartList(cart.n)">删除</a>
+              <a class="sindelet" @click="deleteCartList(cart.bookid, -cart.booknum)">删除</a>
             </li>
           </ul>
         </div>
@@ -55,10 +57,10 @@
           </div>
           <div class="sumprice">
             <em>总价（不含运费） ：</em>
-            <i class="summoney">{{ totalPrice }}</i>
+            <i class="summoney">{{ (totalPrice).toFixed(2) }}</i>
           </div>
           <div class="sumbtn">
-            <router-link class="sum-btn" to="/trade">结算</router-link>
+            <a class="sum-btn" @click="toTradePage">结算</a>
           </div>
         </div>
       </div>
@@ -80,17 +82,21 @@ export default {
   },
   computed: {
     ...mapState({
-      cartInfoList: (state) => state.shopcart.cartListInfo || [],
+      cartInfoList: (state) => state.shopcart.cartListInfo.list || [],
+      orderId: (state) => state.shopcart.orderId
     }),
     isAllChecked() {
-      let newCartList = Object.assign([], this.cartInfoList)
-      return newCartList.every((item) => item.isChecked == 1)
+      if (this.cartInfoList[0]) {
+        return this.cartInfoList.every((item) => item.ischecked == 1)
+      } else {
+        return false
+      }
     },
     totalPrice() {
       let newCartList = Object.assign([], this.cartInfoList)
       let total = 0
       newCartList.forEach((item) => {
-        total += Number(item.prize) * item.skuNum
+        total += Number(item.prize) * item.booknum
       })
       return total
     },
@@ -106,39 +112,36 @@ export default {
           num = 1
           break
         case 'minus':
-          num = cart.skuNum > 1 ? -1 : 0
+          num = cart.booknum >= 1 ? -1 : 0
           break
         case 'change':
           if (isNaN(num) || num < 1) {
             num = 0
           } else {
-            num = parseInt(num) - cart.skuNum
+            num = parseInt(num) - cart.booknum
           }
           break
       }
       //派发action
       try {
-        await this.$store.dispatch('addOrUpdateShopCar', {
-          skuId: cart.n,
-          skuNum: num,
-        })
+        await this.$store.dispatch('addOrUpdateShopCar', { bookid: cart.bookid, booknum: num })
         this.getCartList()
       } catch (error) {
         console.log(error)
       }
     }, 500),
-    async updateChecked(skuId, event) {
+    async updateChecked(bookid, event) {
       try {
         let isChecked = event.target.checked ? '1' : '0'
-        await this.$store.dispatch('updateCheckedInfo', { skuId, isChecked })
+        await this.$store.dispatch('updateCheckedInfo', { bookid, isChecked })
         this.getCartList()
       } catch (error) {
         alert(error.message)
       }
     },
-    async deleteCartList(skuId) {
+    async deleteCartList(bookid, booknum) {
       try {
-        await this.$store.dispatch('deleteCartListInfo', skuId)
+        await this.$store.dispatch('addOrUpdateShopCar', { bookid, booknum })
         this.getCartList()
       } catch (error) {
         alert(error.message)
@@ -161,6 +164,14 @@ export default {
         alert(error.message)
       }
     },
+    async toTradePage() {
+      try {
+        await this.$store.dispatch('getUserOrderId')
+        this.$router.push(`/trade?orderId=${this.orderId}`)
+      } catch (error) {
+        alert(error.message)
+      }
+    }
   },
 }
 </script>
@@ -183,7 +194,7 @@ export default {
       padding: 10px;
       overflow: hidden;
 
-      & > div {
+      &>div {
         float: left;
       }
 
@@ -220,7 +231,7 @@ export default {
         border-bottom: 1px solid #ddd;
         overflow: hidden;
 
-        & > li {
+        &>li {
           float: left;
         }
 

@@ -9,11 +9,11 @@ const mutations = {
     }
 }
 const actions = {
-    async getRecommendBookList({ commit }) {
-        let result = await reqRecommendBookList();
+    async getRecommendBookList({ commit }, { page, num }) {
+        let result = await reqRecommendBookList({ page, num });
         if (result.code == 200) {
             let bookData = result.data.map(item => {
-                item.picture = require(`@/assets/images/picture/${item.picture}`)
+                item.picture = `http://192.168.43.171/picture/${item.picture}`
                 return item
             })
             commit('REQRECOMMENDBOOKLIST', bookData)

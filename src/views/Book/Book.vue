@@ -12,8 +12,8 @@
         </el-col>
         <el-col :span="12">
           <div class="right">
-            <h1 class="bName">书名：{{ singleBookData.name }}</h1>
-            <p class="bDescription" v-show="singleBookData">{{ singleBookData.description }}</p>
+            <h1 class="bName">书名：{{ singleBookData.bookname }}</h1>
+            <p class="bDescription" v-show="singleBookData.description">{{ singleBookData.description }}</p>
             <div class="clearfix">
               <div class="cost_box">
                 <p class="bPrice">
@@ -21,18 +21,16 @@
                   <span class="normal_price">￥ <i>{{ singleBookData.prize }}</i></span>
                 </p>
               </div>
-              <div class="count_per">
-                <em>{{ singleBookData.N_people }}人评论</em>
-              </div>
             </div>
             <p>作者：{{ singleBookData.author }}</p>
-            <p>出版社：{{ singleBookData.publish }}</p>
+            <p>出版社：{{ singleBookData.press }}</p>
+            <p>出版时间:{{ singleBookData.publishtime }}</p>
             <p>评分：{{ singleBookData.score }}</p>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt" v-model="skuNum" @change="changeSkuNum">
-                <a href="javascript:" class="plus" @click="skuNum++">+</a>
-                <a href="javascript:" class="mins" @click="skuNum > 1 ? skuNum-- : skuNum = 1">-</a>
+                <input autocomplete="off" class="itxt" v-model="bookNum" @change="changebookNum">
+                <a href="javascript:" class="plus" @click="bookNum++">+</a>
+                <a href="javascript:" class="mins" @click="bookNum > 1 ? bookNum-- : bookNum = 1">-</a>
               </div>
               <div class="add">
                 <a @click="addShopCar">加入购物车</a>
@@ -54,12 +52,11 @@ export default {
   props: ['id'],
   data() {
     return {
-      skuNum: 1,
+      bookNum: 1,
     }
   },
   mounted() {
     this.$store.dispatch('getDetailInfo', this.id)
-    console.log('-----------', this.singleBookData)
   },
 
   computed: {
@@ -68,27 +65,27 @@ export default {
     }),
   },
   methods: {
-    changeSkuNum(event) {
+    changebookNum(event) {
       let value = event.target.value * 1
       if (isNaN(value) || value < 1) {
-        this.skuNum = 1
+        this.bookNum = 1
       } else {
-        this.skuNum = parseInt(value)
+        this.bookNum = parseInt(value)
       }
     },
     async addShopCar() {
       try {
         await this.$store.dispatch('addOrUpdateShopCar', {
-          skuId: this.id,
-          skuNum: this.skuNum,
+          bookid: this.id,
+          booknum: this.bookNum,
         })
         //路由跳转,将产品信息带给下一级的路由组件
         this.$router.push({
           name: 'addcartsuccess',
-          query: { skuNum: this.skuNum },
+          query: { bookNum: this.bookNum },
         })
         window.sessionStorage.setItem(
-          'SKUINFO',
+          'BOOKINFO',
           JSON.stringify(this.singleBookData)
         )
       } catch (error) {
@@ -232,6 +229,7 @@ export default {
       .add {
         float: left;
         cursor: pointer;
+
         a {
           background-color: #e1251b;
           padding: 0 25px;

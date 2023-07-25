@@ -10,9 +10,6 @@
           <el-form-item label="用户名" prop="name">
             <el-input v-model="ruleForm.name"></el-input>
           </el-form-item>
-          <el-form-item label="手机号" prop="phone">
-            <el-input v-model="ruleForm.phone"></el-input>
-          </el-form-item>
           <el-form-item label="邮箱地址" prop="email">
             <el-input v-model="ruleForm.email"></el-input>
           </el-form-item>
@@ -101,7 +98,6 @@ export default {
     return {
       ruleForm: {
         name: '',
-        phone: '',
         email: '',
         captcha: '',
         pass: '',
@@ -111,10 +107,6 @@ export default {
       rules: {
         name: [
           { validator: validateName, trigger: 'blur' }
-        ],
-        phone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
-          { min: 11, max: 11, message: '输入的手机号不符合要求', trigger: 'blur' }
         ],
         email: [{ validator: validateEmail, trigger: 'blur' }],
         captcha: [
@@ -137,8 +129,8 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           try {
-            const { name, phone, captcha, pass, email } = this.ruleForm;
-            await this.$store.dispatch('userRegister', { username: name, phoneId: phone, captcha, password: pass, email })
+            const { name, captcha, pass, email } = this.ruleForm;
+            await this.$store.dispatch('userRegister', { username: name, captcha, password: pass, email })
             //注册成功
             this.$router.push('/login')
           } catch (error) {
@@ -153,10 +145,13 @@ export default {
     },
     async getCaptcha() {
       const { email } = this.ruleForm
-      try {
-        email && await this.$store.dispatch('getCaptcha', email)
-      } catch (error) {
-        alert(error.message)
+      let emailReg = /^[a-zA-Z0-9.!#$%&amp;'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+      if (email && emailReg.test(email)) {
+        try {
+          email && await this.$store.dispatch('getCaptcha', email)
+        } catch (error) {
+          alert(error.message)
+        }
       }
     }
   }

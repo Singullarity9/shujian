@@ -15,6 +15,13 @@ import axios from 'axios'
 axios.defaults.withCredentials = true
 Vue.prototype.$http = axios
 
+import defaultImg from '@/assets/1.gif'
+import VueLazyload from 'vue-lazyload'
+Vue.use(VueLazyload, {
+  preload: 1.3,
+  loading: defaultImg //懒加载默认图片
+});
+
 Vue.prototype.$imgLogo = Logo
 Vue.use(ElementUI)
 Vue.config.productionTip = false

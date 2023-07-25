@@ -15,10 +15,10 @@
               <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
                 <el-menu-item index="1">用户登录</el-menu-item>
               </el-menu>
-              <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="65px"
-                class="demo-ruleForm ">
-                <el-form-item label="用户名" prop="username">
-                  <el-input type="text" v-model="ruleForm.username" autocomplete="off"></el-input>
+              <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="70px"
+                class="demo-ruleForm " :hide-required-asterisk="true">
+                <el-form-item label="邮箱地址" prop="email">
+                  <el-input type="text" v-model="ruleForm.email" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="pass">
                   <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
@@ -56,11 +56,11 @@ export default {
     return {
       ruleForm: {
         pass: '',
-        username: '',
+        email: '',
       },
       rules: {
         pass: [{ required: true, message: '请输入登录密码', trigger: 'blur' }],
-        username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+        email: [{ required: true, message: '请输入邮箱地址', trigger: 'blur' }],
       },
       login,
       activeIndex: '1',
@@ -74,16 +74,15 @@ export default {
   methods: {
     userLogin() {
       this.$refs['ruleForm'].validate(async (valid) => {
-        const { pass, username } = this.ruleForm;
+        const { pass, email } = this.ruleForm;
         if (valid) {
-          const res = await reqUserLogin({ password: pass, username });
+          const res = await reqUserLogin({ email, password: pass });
           if (res.code == 200) {
             this.$store.commit('USERLOGIN')
             this.$router.push('/')
           } else {
-            return Promise.reject(new Error('failed'))
+            this.$message.error(res.data)
           }
-          console.log(res);
         } else {
           console.log('error submit!!')
           return false

@@ -11,14 +11,14 @@
       </div>
       <div>
         <ul>
-          <li v-for="(item, index) in bookData" :key="item.n" @click="getBookDetail(item.n)">
+          <li v-for="(item, index) in bookData" :key="item.bookid" @click="getBookDetail(item.bookid)">
             <div>
               <img :src="item.picture" alt="" width="180" height="262">
               <div class="content">
-                <p class="name">书名：{{ item.name }}</p>
+                <p class="name">书名：{{ item.bookname }}</p>
                 <p class="price">￥{{ item.prize }}</p>
                 <p class="author">{{ item.author }}</p>
-                <p class="publish">出版社：{{ item.publish }}</p>
+                <p class="publish">出版社：{{ item.press }}</p>
                 <p class="score">评分：{{ item.score }}</p>
               </div>
             </div>
@@ -46,7 +46,7 @@ export default {
     }),
   },
 
-  mounted() {},
+  mounted() { },
 
   methods: {
     getBookDetail(bookId) {

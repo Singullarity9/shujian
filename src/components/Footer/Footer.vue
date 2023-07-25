@@ -42,6 +42,10 @@ div {
     display: flex;
     justify-content: space-between;
 
+    p {
+      font-size: 14px;
+    }
+
     .left {
       p {
         margin: 20px 0;

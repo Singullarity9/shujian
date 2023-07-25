@@ -67,12 +67,20 @@ const routes = [
   {
     path: '/trade',
     component: () => import('@/views/Trade')
+  },
+  {
+    path: '/pay',
+    component: () => import('@/views/Pay')
+  },
+  {
+    path: '/paysuccess',
+    component: () => import('@/views/PaySuccess')
   }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+  //mode: 'history',
+  //base: process.env.BASE_URL,
   routes
 })
 

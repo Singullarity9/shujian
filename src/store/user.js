@@ -1,5 +1,6 @@
 import { reqUserRegister, reqGetCode, reqGetUserInfo, reqUserLogout } from '@/api'
 import { getToken, setToken, removeToken } from '@/utils/auth.js'
+import { Message } from 'element-ui'
 
 const state = {
     token: getToken(),
@@ -8,7 +9,7 @@ const state = {
 const mutations = {
     USERLOGIN(state) {
         state.token = getToken();
-        console.log(state.token);
+        // console.log(state.token);
     },
     CLEAR(state) {
         state.userInfo = {}
@@ -17,7 +18,6 @@ const mutations = {
     },
     GETUSERINFO(state, data) {
         state.userInfo = data
-        //state.userInfo = {}
     }
 }
 
@@ -28,13 +28,15 @@ const actions = {
         if (result.code == 200) {
             return 'ok'
         } else {
-            return Promise.reject(new Error('failed'))
+            Message({
+                message: result.data,
+                type: 'error'
+            })
         }
     },
     //获取验证码
     async getCaptcha(context, email) {
         let result = await reqGetCode(email)
-        //console.log(result)
         if (result.code == 200) {
             return 'ok'
         } else {
@@ -48,7 +50,7 @@ const actions = {
             commit('GETUSERINFO', result.data)
             return 'ok'
         } else {
-            return Promise.reject(new Error('failed'))
+            console.log(result.data);
         }
     },
     //用户注销登录

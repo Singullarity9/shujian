@@ -34,12 +34,12 @@ li {
   font-size: 24px;
 }
 
-.name{
+.name {
   font-weight: bold;
   font-size: 20px;
   margin-bottom: 10px;
   white-space: nowrap;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
   overflow: hidden;
 }
 
@@ -98,4 +98,11 @@ a {
 
 a:hover {
   color: red;
+}
+
+/* 清除浮动 */
+.clearFix::after {
+  content: "";
+  display: block;
+  clear: both;
 }

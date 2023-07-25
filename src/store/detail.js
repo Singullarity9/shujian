@@ -4,30 +4,29 @@ const state = {
   bookDetailInfo: {}
 }
 const mutations = {
-  GETDETAILINFO (state, data) {
+  GETDETAILINFO(state, data) {
     state.bookDetailInfo = data;
   }
 }
 const actions = {
   //获取详细书本信息
-  async getDetailInfo ({ commit }, id) {
+  async getDetailInfo({ commit }, id) {
     let result = await reqBookDetail(id);
-    let newData = result.data.filter((item) => item.n === +id)[0]//一个对象
-    newData.picture = require(`@/assets/images/picture/${newData.picture}`)
+    result.data.picture = `http://192.168.43.171/picture/${result.data.picture}`
     if (result.code == 200) {
-      commit('GETDETAILINFO', newData)
+      commit('GETDETAILINFO', result.data)
 
     } else {
       return Promise.reject(new Error('failed'))
     }
   },
-  //
-  async addOrUpdateShopCar (context, { skuId, skuNum }) {
-    let result = await reqAddOrUpdateShopCar(skuId, skuNum);
+  //添加购物车
+  async addOrUpdateShopCar(context, { bookid, booknum }) {
+    let result = await reqAddOrUpdateShopCar(bookid, booknum);
     if (result.code == 200) {
       return 'ok'
     } else {
-      return Promise.reject(new Error('failed'))
+      return Promise.reject(new Error(result.data))
     }
   }
 }

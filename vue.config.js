@@ -6,9 +6,11 @@ module.exports = defineConfig({
   //代理跨域
   devServer: {
     proxy: {
-      '/api': {
-        //target: 'http://192.168.113.4:80/'
-        target: 'https://yapi.pro/mock/43582',
+      '/': {
+        ws: false,
+        // target: 'http://127.0.0.1:4523/m1/3050715-0-default',
+        target: 'http://192.168.43.171',
+        changeOringin: true,
       }
     }
   }

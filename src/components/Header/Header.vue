@@ -8,7 +8,7 @@
             <router-link to="/"><i class="el-icon-s-home m-20"><span>首页</span></i></router-link>
           </div>
         </el-col>
-        <el-col :span="5" :offset="13" class="right">
+        <el-col :span="7" :offset="11" class="right">
           <div class="grid-content">
             <div>
               <template v-if="!userName">
@@ -73,6 +73,10 @@ div {
     }
 
     .right {
+      .grid-content {
+        padding-right: 0px;
+      }
+
       .active {
         color: #e61716;
       }

@@ -11,15 +11,15 @@
         <div class="goods">
           <div class="left-good">
             <div class="left-pic">
-              <img :src="skuInfo.picture">
+              <img :src="bookInfo.picture">
             </div>
             <div class="right-info">
-              <p class="title">{{ skuInfo.name }}</p>
-              <p class="attr">{{ skuInfo.description }} 数量: {{ $route.query.skuNum }}</p>
+              <p class="title">{{ bookInfo.bookname }}</p>
+              <p class="attr">{{ bookInfo.description }} 数量: {{ $route.query.bookNum }}</p>
             </div>
           </div>
           <div class="right-gocart">
-            <router-link class="sui-btn btn-xlarge" :to="`/book/${skuInfo.n}`">查看商品详情</router-link>
+            <router-link class="sui-btn btn-xlarge" :to="`/book/${bookInfo.bookid}`">查看商品详情</router-link>
             <router-link to="/shopcart">去购物车结算 > </router-link>
           </div>
         </div>
@@ -33,8 +33,8 @@
 export default {
   name: 'AddCartSuccess',
   computed: {
-    skuInfo() {
-      return JSON.parse(window.sessionStorage.getItem('SKUINFO'))
+    bookInfo() {
+      return JSON.parse(window.sessionStorage.getItem('BOOKINFO'))
     },
   },
 }

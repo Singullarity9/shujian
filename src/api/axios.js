@@ -8,7 +8,7 @@ import { Base64 } from "js-base64"
 //创建axios对象，后面的请求用request来发
 const requests = axios.create({
   // 1.基础配置
-  baseURL: "/api",
+  baseURL: "/",
   timeout: 30 * 1000,
   //返回数据类型格式
   //responseType: "json",
